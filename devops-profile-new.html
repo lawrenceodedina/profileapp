@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lawrence Odedina — DevOps Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,600;0,700;1,300;1,600&family=Epilogue:wght@300;400;500&family=Fira+Code:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+  --void:   #080709;
+  --deep:   #0d0b0f;
+  --surface:#131118;
+  --lift:   #1a1720;
+  --edge:   #272330;
+  --gold:   #e8b84b;
+  --gold2:  #f5d07a;
+  --ember:  #ff6b35;
+  --ice:    #7dd3fc;
+  --text:   #ede8e0;
+  --soft:   #7a7085;
+  --faint:  #2e2a38;
+  --serif:  'Cormorant Garamond', serif;
+  --body:   'Epilogue', sans-serif;
+  --code:   'Fira Code', monospace;
+}
+
+body{
+  background:var(--void);
+  color:var(--text);
+  font-family:var(--body);
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ── Custom cursor ── */
+.cursor{
+  position:fixed;
+  width:10px;height:10px;
+  border-radius:50%;
+  background:var(--gold);
+  pointer-events:none;
+  z-index:9999;
+  transform:translate(-50%,-50%);
+  transition:transform 0.08s,width 0.2s,height 0.2s,opacity 0.2s;
+  mix-blend-mode:difference;
+}
+.cursor-ring{
+  position:fixed;
+  width:36px;height:36px;
+  border-radius:50%;
+  border:1px solid rgba(232,184,75,0.4);
+  pointer-events:none;
+  z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:transform 0.18s ease,width 0.25s,height 0.25s;
+}
+
+/* ── Animated gradient mesh background ── */
+.mesh{
+  position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 5%,  rgba(232,184,75,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 90%, rgba(255,107,53,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 70% at 50% 50%, rgba(125,211,252,0.03) 0%, transparent 70%);
+  animation: meshDrift 18s ease-in-out infinite alternate;
+}
+@keyframes meshDrift{
+  from{background-position:0% 0%, 100% 100%, 50% 50%}
+  to  {background-position:5% 8%, 95% 92%, 52% 48%}
+}
+
+/* ── Scanline overlay ── */
+body::before{
+  content:'';
+  position:fixed;inset:0;z-index:1;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,transparent 2px,
+    rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px
+  );
+  pointer-events:none;
+}
+
+/* ── Page wrapper ── */
+.page{
+  position:relative;z-index:2;
+  max-width:1160px;
+  margin:0 auto;
+  padding:0 52px 100px;
+}
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+.hero{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:40px;
+  padding:72px 0 52px;
+  border-bottom:1px solid var(--faint);
+  animation:heroIn 1s cubic-bezier(.16,1,.3,1) both;
+}
+
+.hero-left{}
+
+.status-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-family:var(--code);
+  font-size:10.5px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--soft);
+  margin-bottom:28px;
+}
+.pulse{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 8px var(--gold);
+  animation:pulseGlow 2s ease-in-out infinite;
+}
+
+h1{
+  font-family:var(--serif);
+  font-weight:300;
+  font-size:clamp(60px, 10vw, 120px);
+  line-height:0.88;
+  letter-spacing:-2px;
+  color:var(--text);
+  margin-bottom:10px;
+}
+h1 .surname{
+  display:block;
+  font-style:italic;
+  font-weight:600;
+  background:linear-gradient(105deg, var(--gold) 0%, var(--gold2) 50%, var(--ember) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-title{
+  font-family:var(--code);
+  font-size:11px;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--soft);
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.hero-title::before{
+  content:'';width:40px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold));
+}
+
+.hero-bio{
+  max-width:520px;
+  margin-top:24px;
+  font-size:14px;
+  line-height:1.85;
+  font-weight:300;
+  color:#9d94a8;
+}
+
+.hero-cta{
+  display:flex;gap:12px;margin-top:36px;flex-wrap:wrap;
+}
+
+.btn{
+  font-family:var(--code);
+  font-size:10.5px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  text-decoration:none;
+  padding:11px 24px;
+  border-radius:2px;
+  transition:all 0.25s;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.btn-primary{
+  background:var(--gold);
+  color:var(--void);
+  font-weight:500;
+  border:1px solid var(--gold);
+}
+.btn-primary:hover{
+  background:var(--gold2);
+  box-shadow:0 0 30px rgba(232,184,75,0.35);
+  transform:translateY(-1px);
+}
+.btn-ghost{
+  background:transparent;
+  color:var(--soft);
+  border:1px solid var(--faint);
+}
+.btn-ghost:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+  transform:translateY(-1px);
+}
+
+/* Hero right — metrics tower */
+.metrics-tower{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  border:1px solid var(--faint);
+  border-radius:4px;
+  overflow:hidden;
+  min-width:180px;
+}
+.metric-cell{
+  padding:18px 22px;
+  border-bottom:1px solid var(--faint);
+  position:relative;
+  overflow:hidden;
+  transition:background 0.3s;
+}
+.metric-cell:last-child{border-bottom:none}
+.metric-cell::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;
+  width:2px;
+  background:linear-gradient(180deg,var(--gold),var(--ember));
+  transform:scaleY(0);
+  transform-origin:bottom;
+  transition:transform 0.4s cubic-bezier(.16,1,.3,1);
+}
+.metric-cell:hover::before{transform:scaleY(1)}
+.metric-cell:hover{background:var(--surface)}
+.metric-val{
+  font-family:var(--serif);
+  font-size:34px;
+  font-weight:600;
+  color:var(--gold);
+  line-height:1;
+  display:block;
+}
+.metric-label{
+  font-family:var(--code);
+  font-size:9.5px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--soft);
+  margin-top:4px;
+}
+
+/* ════════════════════════════════
+   TWO COLUMN BODY
+════════════════════════════════ */
+.body-wrap{
+  display:grid;
+  grid-template-columns:1fr 300px;
+  gap:0;
+  border-bottom:1px solid var(--faint);
+}
+
+.main-col{
+  border-right:1px solid var(--faint);
+  padding:60px 56px 60px 0;
+}
+.side-col{
+  padding:60px 0 60px 44px;
+}
+
+/* ── Section label ── */
+.s-label{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:36px;
+}
+.s-label-text{
+  font-family:var(--code);
+  font-size:9.5px;
+  letter-spacing:0.35em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.s-label::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,var(--faint),transparent);
+}
+
+/* ── Experience ── */
+.exp-block{margin-bottom:52px}
+
+.exp-item{
+  display:grid;
+  grid-template-columns:24px 1fr;
+  gap:0 24px;
+  padding-bottom:44px;
+  position:relative;
+}
+.exp-item::after{
+  content:'';
+  position:absolute;
+  left:11px;top:10px;bottom:0;
+  width:1px;
+  background:linear-gradient(180deg,var(--faint),transparent);
+}
+.exp-item:last-child::after{display:none}
+
+.exp-dot{
+  width:10px;height:10px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  background:var(--void);
+  flex-shrink:0;
+  margin-top:5px;
+  position:relative;z-index:1;
+  transition:background 0.2s,box-shadow 0.2s;
+}
+.exp-item:hover .exp-dot{
+  background:var(--gold);
+  box-shadow:0 0 12px rgba(232,184,75,0.6);
+}
+
+.exp-content{}
+
+.exp-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:6px;
+  gap:16px;
+}
+.exp-role{
+  font-family:var(--serif);
+  font-size:22px;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.15;
+}
+.exp-period{
+  font-family:var(--code);
+  font-size:10px;
+  color:var(--soft);
+  letter-spacing:0.08em;
+  white-space:nowrap;
+  padding-top:4px;
+}
+.exp-company{
+  font-family:var(--code);
+  font-size:11px;
+  color:var(--gold);
+  letter-spacing:0.1em;
+  margin-bottom:12px;
+}
+.exp-desc{
+  font-size:13px;
+  line-height:1.82;
+  color:#8a8096;
+  font-weight:300;
+  margin-bottom:14px;
+}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px}
+.tag{
+  font-family:var(--code);
+  font-size:10px;
+  padding:4px 10px;
+  border:1px solid var(--faint);
+  border-radius:2px;
+  color:var(--soft);
+  background:var(--surface);
+  transition:border-color 0.2s,color 0.2s;
+}
+.tag:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── Skills ── */
+.skills-block{margin-bottom:0}
+
+.skill-row{margin-bottom:16px}
+.skill-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:7px;
+}
+.skill-name{font-size:13px;color:var(--text);font-weight:400}
+.skill-pct{
+  font-family:var(--code);
+  font-size:10px;
+  color:var(--soft);
+}
+.track{
+  height:1px;
+  background:var(--faint);
+  border-radius:1px;
+  overflow:visible;
+  position:relative;
+}
+.fill{
+  height:1px;
+  border-radius:1px;
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+  position:relative;
+  transform-origin:left;
+  animation:fillSlide 1.2s cubic-bezier(.16,1,.3,1) 0.4s both;
+}
+.fill::after{
+  content:'';
+  position:absolute;right:-1px;top:-3px;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--gold2);
+  box-shadow:0 0 8px var(--gold);
+}
+
+/* ── Sidebar: Contact ── */
+.side-block{margin-bottom:44px}
+
+.contact-stack{display:flex;flex-direction:column;gap:14px}
+.c-row{display:flex;flex-direction:column;gap:3px}
+.c-label{
+  font-family:var(--code);
+  font-size:9px;
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:var(--soft);
+}
+.c-val{
+  font-size:13px;
+  color:var(--text);
+  text-decoration:none;
+  font-weight:300;
+  transition:color 0.2s;
+}
+.c-val:hover{color:var(--gold)}
+
+/* ── Sidebar: Certs ── */
+.cert-stack{display:flex;flex-direction:column;gap:10px}
+
+.cert-card{
+  background:var(--surface);
+  border:1px solid var(--faint);
+  border-radius:3px;
+  padding:14px 16px;
+  display:flex;gap:12px;align-items:flex-start;
+  position:relative;
+  overflow:hidden;
+  transition:border-color 0.25s,transform 0.25s;
+}
+.cert-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0;
+  transition:opacity 0.3s;
+}
+.cert-card:hover{border-color:rgba(232,184,75,0.3);transform:translateX(3px)}
+.cert-card:hover::before{opacity:1}
+
+.cert-ico{font-size:18px;line-height:1;flex-shrink:0;margin-top:1px}
+.cert-name{
+  font-family:var(--serif);
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.2;
+  margin-bottom:3px;
+}
+.cert-sub{
+  font-family:var(--code);
+  font-size:9.5px;
+  color:var(--soft);
+  letter-spacing:0.04em;
+}
+
+/* ── Tools grid ── */
+.tools-wrap{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+.chip{
+  font-family:var(--code);
+  font-size:10.5px;
+  padding:5px 12px;
+  border:1px solid var(--faint);
+  border-radius:2px;
+  color:var(--soft);
+  background:var(--surface);
+  cursor:default;
+  transition:all 0.2s;
+}
+.chip:hover{
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(232,184,75,0.05);
+  box-shadow:0 0 12px rgba(232,184,75,0.12);
+}
+.chip.hot{
+  border-color:rgba(232,184,75,0.35);
+  color:var(--gold2);
+  background:rgba(232,184,75,0.07);
+}
+
+/* ── Bottom Strip ── */
+.bottom-strip{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  border-bottom:1px solid var(--faint);
+  animation:riseUp 0.9s cubic-bezier(.16,1,.3,1) 0.25s both;
+}
+.b-cell{
+  padding:44px 0;
+  border-right:1px solid var(--faint);
+}
+.b-cell:last-child{border-right:none}
+.b-cell:nth-child(2){padding-left:44px;padding-right:44px}
+.b-cell:nth-child(3){padding-left:44px}
+
+.b-cell .s-label{margin-bottom:20px}
+
+.edu-degree{
+  font-family:var(--serif);
+  font-size:20px;
+  font-weight:600;
+  color:var(--text);
+  margin-bottom:4px;
+}
+.edu-school{
+  font-family:var(--code);
+  font-size:10.5px;
+  color:var(--gold);
+  letter-spacing:0.1em;
+  margin-bottom:2px;
+}
+.edu-year{
+  font-family:var(--code);
+  font-size:10px;
+  color:var(--soft);
+}
+
+.langs-stack{display:flex;flex-direction:column;gap:10px}
+.lang-row{display:flex;justify-content:space-between;align-items:center}
+.lang-name{font-size:13px;color:var(--text)}
+.lang-level{
+  font-family:var(--code);
+  font-size:9.5px;
+  color:var(--soft);
+  padding:3px 8px;
+  border:1px solid var(--faint);
+  border-radius:2px;
+}
+
+.interests-wrap{display:flex;flex-wrap:wrap;gap:7px}
+.interest{
+  font-family:var(--code);
+  font-size:10px;
+  padding:5px 12px;
+  border:1px solid var(--faint);
+  border-radius:20px;
+  color:var(--soft);
+  background:var(--surface);
+}
+
+/* ── Footer ── */
+.footer{
+  padding-top:36px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-family:var(--code);
+  font-size:10px;
+  color:var(--soft);
+  letter-spacing:0.08em;
+  animation:riseUp 1s cubic-bezier(.16,1,.3,1) 0.35s both;
+}
+.footer-name{
+  font-family:var(--serif);
+  font-size:18px;
+  font-weight:600;
+  font-style:italic;
+  background:linear-gradient(105deg,var(--gold),var(--gold2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+/* ── Animations ── */
+@keyframes heroIn{
+  from{opacity:0;transform:translateY(24px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@keyframes riseUp{
+  from{opacity:0;transform:translateY(16px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@keyframes fillSlide{
+  from{transform:scaleX(0)}
+  to  {transform:scaleX(1)}
+}
+@keyframes pulseGlow{
+  0%,100%{box-shadow:0 0 6px var(--gold);opacity:1}
+  50%    {box-shadow:0 0 18px var(--gold);opacity:0.6}
+}
+
+/* ── Responsive ── */
+@media(max-width:860px){
+  .page{padding:0 24px 70px}
+  h1{letter-spacing:-1px}
+  .hero{grid-template-columns:1fr;padding:52px 0 40px}
+  .metrics-tower{flex-direction:row;flex-wrap:wrap}
+  .metric-cell{flex:1;min-width:120px}
+  .body-wrap{grid-template-columns:1fr}
+  .main-col{border-right:none;padding:44px 0 0}
+  .side-col{padding:44px 0;border-top:1px solid var(--faint)}
+  .bottom-strip{grid-template-columns:1fr}
+  .b-cell{border-right:none;border-bottom:1px solid var(--faint);padding:36px 0}
+  .b-cell:nth-child(2),.b-cell:nth-child(3){padding-left:0;padding-right:0}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+<div class="mesh"></div>
+
+<div class="page">
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="status-bar">
+        <span class="pulse"></span>
+        <span>Available for opportunities</span>
+        <span style="color:var(--faint)">///</span>
+        <span>Senior Level</span>
+      </div>
+
+      <h1>
+        Femi
+        <span class="surname">Odedina.</span>
+      </h1>
+
+      <div class="hero-title">DevOps Engineer &nbsp;·&nbsp; SRE &nbsp;·&nbsp; Cloud Architect</div>
+
+      <p class="hero-bio">
+        8 years building infrastructure that doesn't flinch. I turn brittle, hand-stitched
+        deployments into elegant, automated systems — so engineering teams spend their time
+        building product, not fighting fires.
+      </p>
+
+      <div class="hero-cta">
+        <a href="mailto:lawrenceodedina@gmail.com" class="btn btn-primary">↗ Get in touch</a>
+        <a href="#" class="btn btn-ghost">GitHub</a>
+        <a href="#" class="btn btn-ghost">LinkedIn</a>
+      </div>
+    </div>
+
+    <div class="metrics-tower">
+      <div class="metric-cell">
+        <span class="metric-val">99.97%</span>
+        <div class="metric-label">Uptime SLA</div>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-val">150+</span>
+        <div class="metric-label">Pipelines Built</div>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-val">3×</span>
+        <div class="metric-label">Deploy Velocity</div>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-val">40%</span>
+        <div class="metric-label">Cloud Cost Saved</div>
+      </div>
+      <div class="metric-cell">
+        <span class="metric-val">5.6×</span>
+        <div class="metric-label">MTTR Improvement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ BODY ═══════════ -->
+  <div class="body-wrap">
+
+    <!-- MAIN -->
+    <div class="main-col">
+
+      <!-- Experience -->
+      <div class="exp-block">
+        <div class="s-label"><span class="s-label-text">Experience</span></div>
+
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div class="exp-content">
+            <div class="exp-header">
+              <div class="exp-role">Senior DevOps Engineer</div>
+              <div class="exp-period">2022 — Present</div>
+            </div>
+            <div class="exp-company">TechCorp Inc. · San Francisco, CA</div>
+            <p class="exp-desc">
+              Architected migration from monolith to microservices on Amazon EKS, slashing
+              deployment time by 70% and achieving 99.97% uptime across all production services.
+              Designed multi-region active-active disaster recovery. Built an internal developer
+              platform adopted by 60+ engineers. Drove 40% cloud cost reduction through
+              intelligent right-sizing and spot instance strategies.
+            </p>
+            <div class="tag-row">
+              <span class="tag">AWS EKS</span><span class="tag">Terraform</span>
+              <span class="tag">ArgoCD</span><span class="tag">Datadog</span>
+              <span class="tag">Python</span><span class="tag">Backstage</span><span class="tag">Istio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div class="exp-content">
+            <div class="exp-header">
+              <div class="exp-role">DevOps Engineer</div>
+              <div class="exp-period">2019 — 2022</div>
+            </div>
+            <div class="exp-company">CloudSys Labs · Remote</div>
+            <p class="exp-desc">
+              Owned CI/CD for 15 production services. Introduced GitOps with Helm + ArgoCD.
+              Reduced MTTR from 45 min to under 8 min via automated alerting, runbooks, and
+              on-call tooling. Built self-service Terraform module library used across 4 teams.
+            </p>
+            <div class="tag-row">
+              <span class="tag">Kubernetes</span><span class="tag">Jenkins</span>
+              <span class="tag">Helm</span><span class="tag">Prometheus</span>
+              <span class="tag">GCP</span><span class="tag">PagerDuty</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-dot"></div>
+          <div class="exp-content">
+            <div class="exp-header">
+              <div class="exp-role">Systems Engineer</div>
+              <div class="exp-period">2017 — 2019</div>
+            </div>
+            <div class="exp-company">StartupXYZ · Austin, TX</div>
+            <p class="exp-desc">
+              Led full on-prem to AWS migration. Stood up ELK centralised logging and monitoring.
+              Automated server provisioning with Ansible — cut manual overhead by 60%.
+            </p>
+            <div class="tag-row">
+              <span class="tag">AWS EC2</span><span class="tag">Ansible</span>
+              <span class="tag">ELK Stack</span><span class="tag">Bash</span><span class="tag">Nginx</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Skills -->
+      <div class="skills-block">
+        <div class="s-label"><span class="s-label-text">Core Skills</span></div>
+
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">Kubernetes / EKS</span><span class="skill-pct">94%</span></div>
+          <div class="track"><div class="fill" style="width:94%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">Terraform / IaC</span><span class="skill-pct">91%</span></div>
+          <div class="track"><div class="fill" style="width:91%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">CI/CD Architecture</span><span class="skill-pct">95%</span></div>
+          <div class="track"><div class="fill" style="width:95%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">AWS / GCP</span><span class="skill-pct">90%</span></div>
+          <div class="track"><div class="fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">Python / Bash / Go</span><span class="skill-pct">88%</span></div>
+          <div class="track"><div class="fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">Observability &amp; SLOs</span><span class="skill-pct">87%</span></div>
+          <div class="track"><div class="fill" style="width:87%"></div></div>
+        </div>
+        <div class="skill-row">
+          <div class="skill-top"><span class="skill-name">DevSecOps / Vault</span><span class="skill-pct">81%</span></div>
+          <div class="track"><div class="fill" style="width:81%"></div></div>
+        </div>
+      </div>
+
+    </div><!-- /main-col -->
+
+    <!-- SIDEBAR -->
+    <div class="side-col">
+
+      <div class="side-block">
+        <div class="s-label"><span class="s-label-text">Contact</span></div>
+        <div class="contact-stack">
+          <div class="c-row">
+            <span class="c-label">Email</span>
+            <a href="mailto:lawrenceodedina@gmail.com" class="c-val">lawrenceodedina@gmail.com</a>
+          </div>
+          <div class="c-row">
+            <span class="c-label">LinkedIn</span>
+            <a href="#" class="c-val">linkedin.com/in/lawrenceodedina</a>
+          </div>
+          <div class="c-row">
+            <span class="c-label">GitHub</span>
+            <a href="#" class="c-val">github.com/lawrenceodedina</a>
+          </div>
+          <div class="c-row">
+            <span class="c-label">Location</span>
+            <span class="c-val">San Francisco, CA</span>
+          </div>
+          <div class="c-row">
+            <span class="c-label">Availability</span>
+            <span class="c-val" style="color:var(--gold)">Open · Remote & Hybrid</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="s-label"><span class="s-label-text">Certifications</span></div>
+        <div class="cert-stack">
+          <div class="cert-card">
+            <div class="cert-ico">☁️</div>
+            <div>
+              <div class="cert-name">AWS Solutions Architect</div>
+              <div class="cert-sub">Professional · AWS · 2023</div>
+            </div>
+          </div>
+          <div class="cert-card">
+            <div class="cert-ico">⎈</div>
+            <div>
+              <div class="cert-name">CKA</div>
+              <div class="cert-sub">Kubernetes Admin · CNCF · 2022</div>
+            </div>
+          </div>
+          <div class="cert-card">
+            <div class="cert-ico">🔷</div>
+            <div>
+              <div class="cert-name">Terraform Associate</div>
+              <div class="cert-sub">003 · HashiCorp · 2023</div>
+            </div>
+          </div>
+          <div class="cert-card">
+            <div class="cert-ico">🔐</div>
+            <div>
+              <div class="cert-name">AWS Security Specialty</div>
+              <div class="cert-sub">Specialty · AWS · 2024</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-block">
+        <div class="s-label"><span class="s-label-text">Tools</span></div>
+        <div class="tools-wrap">
+          <span class="chip hot">Kubernetes</span>
+          <span class="chip hot">Terraform</span>
+          <span class="chip hot">AWS</span>
+          <span class="chip">Docker</span>
+          <span class="chip">ArgoCD</span>
+          <span class="chip">Helm</span>
+          <span class="chip">GH Actions</span>
+          <span class="chip">Jenkins</span>
+          <span class="chip">Prometheus</span>
+          <span class="chip">Grafana</span>
+          <span class="chip">Datadog</span>
+          <span class="chip">Ansible</span>
+          <span class="chip">Vault</span>
+          <span class="chip">Istio</span>
+          <span class="chip">Redis</span>
+          <span class="chip">Postgres</span>
+          <span class="chip">GCP</span>
+          <span class="chip">Linux</span>
+        </div>
+      </div>
+
+    </div><!-- /side-col -->
+  </div><!-- /body-wrap -->
+
+  <!-- ═══════════ BOTTOM STRIP ═══════════ -->
+  <div class="bottom-strip">
+    <div class="b-cell">
+      <div class="s-label"><span class="s-label-text">Education</span></div>
+      <div class="edu-degree">B.Sc. Computer Science</div>
+      <div class="edu-school">University of Texas at Austin</div>
+      <div class="edu-year">Graduated 2017 · GPA 3.8</div>
+    </div>
+
+    <div class="b-cell">
+      <div class="s-label"><span class="s-label-text">Languages</span></div>
+      <div class="langs-stack">
+        <div class="lang-row">
+          <span class="lang-name">English</span>
+          <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-row">
+          <span class="lang-name">Spanish</span>
+          <span class="lang-level">Professional</span>
+        </div>
+        <div class="lang-row">
+          <span class="lang-name">German</span>
+          <span class="lang-level">Conversational</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-cell">
+      <div class="s-label"><span class="s-label-text">Interests</span></div>
+      <div class="interests-wrap">
+        <span class="interest">Open Source</span>
+        <span class="interest">Platform Eng.</span>
+        <span class="interest">FinOps</span>
+        <span class="interest">Rust</span>
+        <span class="interest">Rock Climbing</span>
+        <span class="interest">Mechanical Keyboards</span>
+        <span class="interest">Homelab</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    <div>
+      <div class="footer-name">Lawrence Odedina</div>
+      <div style="margin-top:4px">Senior DevOps Engineer · 2026</div>
+    </div>
+    <div style="text-align:center;line-height:2">
+      <div>Open to remote & hybrid</div>
+      <div style="color:var(--gold)">lawrenceodedina@gmail.com</div>
+    </div>
+    <div style="text-align:right;line-height:2">
+      <div>San Francisco, CA</div>
+      <div>Updated March 2026</div>
+    </div>
+  </footer>
+
+</div><!-- /page -->
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cur');
+  const ring = document.getElementById('ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{
+    mx=e.clientX; my=e.clientY;
+    cur.style.left=mx+'px'; cur.style.top=my+'px';
+  });
+  (function animate(){
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    ring.style.left=rx+'px'; ring.style.top=ry+'px';
+    requestAnimationFrame(animate);
+  })();
+  document.querySelectorAll('a,.btn,.metric-cell,.cert-card,.chip,.tag').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{
+      cur.style.width='18px'; cur.style.height='18px';
+      ring.style.width='52px'; ring.style.height='52px';
+    });
+    el.addEventListener('mouseleave',()=>{
+      cur.style.width='10px'; cur.style.height='10px';
+      ring.style.width='36px'; ring.style.height='36px';
+    });
+  });
+</script>
+</body>
+</html>
